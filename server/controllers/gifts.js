@@ -43,7 +43,37 @@ const createGift = async (req, res) => {
         // .rows: This tells JavaScript to ignore all the extra metadata and just look at the rows array, which holds the actual data we just inserted.
         // [0]: Because .rows is always an array (even if you only inserted one single item), your newly created gift is sitting at the very first position in that array (index 0).
     }
-    catch(error) {
+    catch (error) {
+        res.status(409).json({ error: error.message })
+    }
+}
+
+
+const updateGift = async (req, res) => {
+    try {
+        const id = parseInt(req.param.id)
+        const { name, pricepoint, audience, image, description, submittedby, submittedon } = req.body
+        const results = await pool.query(
+            `UPDATE gifts SET name = $1, pricepoint = $2, audience = $3, image = $4, description = $5, submittedby = $6, submittedon = $7 WHERE id = $8`,
+    [name, pricepoint, audience, image, description, submittedby, submittedon, id]
+)
+    }
+    catch (error){
+        res.status(409).json ({error: error.message})
+
+    }
+}
+
+
+const deleteGift = async (req, res) => {
+    try{
+        // this is to get the ID of the thing we want to delete
+        const id = parseInt(req.param,id);
+        const result = await pool.query(`DELETE FROM gifts WHERE id = $1`, [id])
+        // if the result is fine it will get to this line
+        res.status(200).json(result.jsonp[0]);
+    }
+    catch (error){
         res.status(409).json({error: error.message})
     }
 }
