@@ -43,7 +43,7 @@ const createGift = async (req, res) => {
         // .rows: This tells JavaScript to ignore all the extra metadata and just look at the rows array, which holds the actual data we just inserted.
         // [0]: Because .rows is always an array (even if you only inserted one single item), your newly created gift is sitting at the very first position in that array (index 0).
     }
-    catch {
-
+    catch(error) {
+        res.status(409).json({error: error.message})
     }
 }
